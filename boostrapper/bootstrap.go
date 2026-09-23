@@ -41,21 +41,20 @@ func newLogger(debug, silent bool) zerolog.Logger {
 }
 
 // StepExecutionContext carries the information shared across all init steps.
-type StepExecutionContext struct {
-	Logger         *zerolog.Logger // Logger to use for all steps
-	OutputDir      string
-	ForceOverwrite bool
-	WipeOutputDir  bool
-	ProgramName    string
+type StepExecutionContext[T Options] struct {
+	Logger      *zerolog.Logger // Logger to use for all steps
+	OutputDir   string
+	ProgramName string
+	Options     T
 }
 
 type Bootstrapper[T Options] struct {
 	Opts    *T
-	Context *StepExecutionContext
+	Context *StepExecutionContext[T]
 }
 
 func (b *Bootstrapper[T]) InitFailOverContext(logger zerolog.Logger) {
-	b.Context = &StepExecutionContext{
+	b.Context = &StepExecutionContext[T]{
 		Logger: &logger,
 	}
 }
@@ -110,7 +109,7 @@ func (b *Bootstrapper[T]) Init() (int, error) {
 	return INIT_VALID, nil
 }
 
-func (b *Bootstrapper[T]) Generate(steps []InitStep) int {
+func (b *Bootstrapper[T]) Generate(steps []InitStep[T]) int {
 	// Execution of all steps, stop after first failure
 	for _, step := range steps {
 		b.Context.Logger.Info().Msgf("==> %s", step.Name)
@@ -132,12 +131,11 @@ func ExecuteCommand(outputDir string, commandName string, commandParameter ...st
 		return fmt.Errorf("open nemo failed: %w", err)
 	}
 	return nil
-
 }
 
 // NewContext builds a Context for workDir, detecting the project name from its folder name.
 // If workDir is empty, the current working directory is used.
-func NewContext[T Options](logger *zerolog.Logger, options T, cwd string) *StepExecutionContext {
+func NewContext[T Options](logger *zerolog.Logger, options T, cwd string) *StepExecutionContext[T] {
 	workDir := options.GetOutputDir()
 	if workDir == "" {
 		workDir = cwd
@@ -147,11 +145,11 @@ func NewContext[T Options](logger *zerolog.Logger, options T, cwd string) *StepE
 		name = filepath.Base(workDir)
 	}
 
-	return &StepExecutionContext{
-		Logger:         logger,
-		OutputDir:      workDir,
-		ProgramName:    name,
-		ForceOverwrite: options.GetForceOverwrite(),
-		WipeOutputDir:  options.GetWipeOutputDir(),
+	// Context contains only what has been overwritten from options or has been locally defined (like the logger)
+	return &StepExecutionContext[T]{
+		Logger:      logger,
+		OutputDir:   workDir,
+		ProgramName: name,
+		Options:     options,
 	}
 }

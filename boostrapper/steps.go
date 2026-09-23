@@ -11,9 +11,9 @@ import (
 )
 
 // InitStep is a single, named action executed against a Context while bootstrapping a project.
-type InitStep struct {
+type InitStep[T Options] struct {
 	Name string
-	Run  func(ctx *StepExecutionContext) error
+	Run  func(ctx *StepExecutionContext[T]) error
 }
 
 // FileToGenerate maps an embedded template name to the relative path it produces in the target project.
@@ -29,11 +29,11 @@ var templateFuncs = template.FuncMap{
 	},
 }
 
-func StepInitOutputDirectory() InitStep {
-	return InitStep{
+func StepInitOutputDirectory[T Options]() InitStep[T] {
+	return InitStep[T]{
 		Name: "Initialize bootstrap",
-		Run: func(ctx *StepExecutionContext) error {
-			if err := ForceMkDirAllAndWipeBeforeIfNeeded(ctx.OutputDir, ctx.WipeOutputDir); err != nil {
+		Run: func(ctx *StepExecutionContext[T]) error {
+			if err := ForceMkDirAllAndWipeBeforeIfNeeded(ctx.OutputDir, ctx.Options.GetWipeOutputDir()); err != nil {
 				return err
 			}
 
@@ -42,15 +42,15 @@ func StepInitOutputDirectory() InitStep {
 	}
 }
 
-func StepRenderTemplates(filesToGenerate []FileToGenerate, templates *embed.FS, data any) InitStep {
-	return InitStep{
+func StepRenderTemplates[T Options](filesToGenerate []FileToGenerate, templates *embed.FS, data any) InitStep[T] {
+	return InitStep[T]{
 		Name: "Generate templates",
-		Run: func(ctx *StepExecutionContext) error {
+		Run: func(ctx *StepExecutionContext[T]) error {
 
 			for _, file := range filesToGenerate {
 				targetPath := filepath.Join(ctx.OutputDir, file.Output)
 
-				if !ctx.ForceOverwrite {
+				if !ctx.Options.GetForceOverwrite() {
 					if _, err := os.Stat(targetPath); err == nil {
 						return fmt.Errorf("file %q already exists (use --force to overwrite)", targetPath)
 					}
