@@ -1,0 +1,12 @@
+bin/
+build/
+dist/
+distribution/
+tmp/
+*.log
+*.tmp
+*.swp
+*.exe
+*.exe~
+*.dll
+.vscode/
