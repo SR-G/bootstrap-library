@@ -3,7 +3,8 @@ module github.com/SR-G/bootstrap-library
 go 1.27.1
 
 require (
-	github.com/SR-G/argweave v0.1.1
+	github.com/SR-G/argweave v0.1.3
+	github.com/SR-G/sul v0.1.0
 	github.com/rs/zerolog v1.35.1
 )
 

@@ -8,6 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 	"text/template"
+
+	sul "github.com/SR-G/sul/files"
 )
 
 // InitStep is a single, named action executed against a Context while bootstrapping a project.
@@ -33,7 +35,7 @@ func StepInitOutputDirectory[T Options]() InitStep[T] {
 	return InitStep[T]{
 		Name: "Initialize bootstrap",
 		Run: func(ctx *StepExecutionContext[T]) error {
-			if err := ForceMkDirAllAndWipeBeforeIfNeeded(ctx.OutputDir, ctx.Options.GetWipeOutputDir()); err != nil {
+			if err := sul.ForceMkDirAllAndWipeBeforeIfNeeded(ctx.OutputDir, ctx.Options.GetWipeOutputDir()); err != nil {
 				return err
 			}
 
@@ -62,7 +64,7 @@ func StepRenderTemplates[T Options](filesToGenerate []FileToGenerate, templates 
 				}
 
 				baseTargetPath := filepath.Dir(targetPath)
-				if err := ForceMkDirAll(baseTargetPath); err != nil {
+				if err := sul.ForceMkDirAll(baseTargetPath); err != nil {
 					return err
 				}
 

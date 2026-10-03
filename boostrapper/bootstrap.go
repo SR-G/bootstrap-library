@@ -18,6 +18,7 @@ import (
 
 const (
 	INIT_VALID             = -1
+	INIT_HELP_REQUESTED    = -2
 	OS_EXIT_OK             = 0
 	OS_EXIT_ERROR_OPTIONS  = 1
 	OS_EXIT_ERROR_INIT     = 2
@@ -91,8 +92,13 @@ func (b *Bootstrapper[T]) Init() (int, error) {
 	if err != nil {
 		return OS_EXIT_ERROR_OPTIONS, err
 	}
-	if _, err = parser.Parse(os.Args[1:]); err != nil {
+	command, err := parser.Parse(os.Args[1:])
+	if err != nil {
 		return OS_EXIT_ERROR_OPTIONS, err
+	}
+	if command == argweave.COMMAND_HELP {
+		fmt.Println(parser.GenerateHelp())
+		return INIT_HELP_REQUESTED, nil
 	}
 
 	// Real logger / context initialization

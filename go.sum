@@ -1,7 +1,9 @@
 github.com/BurntSushi/toml v1.6.0 h1:dRaEfpa2VI55EwlIW72hMRHdWouJeRF7TPYhI+AUQjk=
 github.com/BurntSushi/toml v1.6.0/go.mod h1:ukJfTF/6rtPPRCnwkur4qwRxa8vTRFBF0uk2lLoLwho=
-github.com/SR-G/argweave v0.1.1 h1:ktVyYFOIyZXFmJ+FKP7iwhiTkdm3NuO90gY2PQVY7wM=
-github.com/SR-G/argweave v0.1.1/go.mod h1:BOhGTdd+6cVY4yT4aglPJB7oIoAwJBRytq+bAG+qGro=
+github.com/SR-G/argweave v0.1.3 h1:wd62KwYnh4uZpTCDbn0pYeHxwCyTBHef5zXRbWum5fI=
+github.com/SR-G/argweave v0.1.3/go.mod h1:BOhGTdd+6cVY4yT4aglPJB7oIoAwJBRytq+bAG+qGro=
+github.com/SR-G/sul v0.1.0 h1:yFs27XH+1B2RjJG6gCi3DM6apF4PunsDLur7pfDRm+s=
+github.com/SR-G/sul v0.1.0/go.mod h1:9THCnrC692VDIuj9aQlr9793RInBabA6SERlYg96V0w=
 github.com/mattn/go-colorable v0.1.14 h1:9A9LHSqF/7dyVVX6g0U9cwm9pG3kP9gSzcuIPHPsaIE=
 github.com/mattn/go-colorable v0.1.14/go.mod h1:6LmQG8QLFO4G5z1gPvYEzlUgJ2wF+stgPZH1UqBm1s8=
 github.com/mattn/go-isatty v0.0.20 h1:xfD0iDuEKnDkl03q4limB+vH+GxLEtL/jb4xVJSWWEY=
